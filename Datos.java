@@ -5,7 +5,12 @@
  */
 package com.mycompany.proyectopreguntastest;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,16 +20,24 @@ public class Datos {
     public static ArrayList<Pregunta> obtenerPreguntas()
     {
         ArrayList<Pregunta> lista_preguntas=new ArrayList();
-        String[] respuestas={"Colon", "Bonaparte", "Pinzón", "Pérez"};
-        Pregunta p=new Pregunta("¿Cómo se apellidaba el emperador Napoleón?", respuestas, 2);
-        lista_preguntas.add(p);
-        String[] respuestas2={"Arsuaga", "Pérez", "Zapatero", "Rajoy"};
-        Pregunta p2=new Pregunta("¿Cómo se apellida el descubridor de Atapuerca?", respuestas2,1);
-        String[] respuestas3={"Real Madrid", "Atleti", "Espanyol", "Barcelona"};
-        Pregunta p3=new Pregunta("El equipo del Gobierno, la vergüenza del país...", respuestas3,1);
-         lista_preguntas.add(p2);
-          lista_preguntas.add(p3);
-          return lista_preguntas;
+        try {
+            FileReader fr=new FileReader("C:\\preguntas\\preguntas.csv");
+            BufferedReader br=new BufferedReader(fr);
+            String linea=br.readLine();
+            while(linea!=null)
+            {
+                String[] datos=linea.split(",");
+                String texto_pregunta=datos[0];
+                String[] respuestas={datos[1], datos[2], datos[3], datos[4]};
+                int indice=Integer.parseInt(datos[5]);
+                Pregunta p=new Pregunta(texto_pregunta, respuestas, indice);
+                lista_preguntas.add(p);
+                linea=br.readLine();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lista_preguntas;
         
     }
             
